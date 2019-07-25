@@ -7,27 +7,26 @@ use GuzzleHttp\Client;
 
 class CriptografiaController extends Controller
 {
-    private $alfabeto = [];
+    protected $alfabeto = [];
+    protected $client ;
 
     public function __construct()
     {
         $this->alfabeto = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z");
+        $this->client = $client = new Client([
+            'base_uri' => 'https://api.codenation.dev/v1/challenge/dev-ps/',
+        ]);
     }
 
     public function index()
     {
-        $client = new Client([
-            'base_uri' => 'https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token=ee86ea5dfd1784bc4672d9adfb11fd00d55bb688',
-            'timeout'  => 2.0,
-        ]);
-
-        $response = $client->request('GET', '');
-
+        $response = $this->client->request('GET', 'generate-data?token=ee86ea5dfd1784bc4672d9adfb11fd00d55bb688');
         $desafioCriptografado = json_decode($response->getBody()->getContents());
 
         $this->geraArquivoJson($desafioCriptografado);
         $this->decifraMensagem();
         $this->geraResumoCriptografado();
+        $this->submeteCriptografia();
         $desafio  = $this->getAnswerJson();
         return view('index', compact('desafio') );
 
@@ -75,10 +74,10 @@ class CriptografiaController extends Controller
         $this->geraArquivoJson($desafioCriptografado);
     }
 
-    public function geraArquivoJson($dados_json)
+    public function geraArquivoJson($dadosJson)
     {
-        $dados_json = json_encode($dados_json);
-        file_put_contents('answer.json', $dados_json);
+        $dadosJson = json_encode($dadosJson);
+        file_put_contents('answer.json', $dadosJson);
     }
 
     public function getAnswerJson()
@@ -86,10 +85,20 @@ class CriptografiaController extends Controller
         // Atribui o conteúdo do arquivo para variável $arquivo
         $arquivo = file_get_contents('answer.json');
         // Decodifica o formato JSON e retorna um Objeto
-        $json = json_decode($arquivo);
+        $dadosArquivo = json_decode($arquivo);
 
-        return $json;
+        return $dadosArquivo;
     }
 
-
+    public function submeteCriptografia()
+    {
+        $response = $this->client->request('POST', 'submit-solution?token=ee86ea5dfd1784bc4672d9adfb11fd00d55bb688', [
+            'multipart' => [
+                [
+                    'name'     => 'answer',
+                    'contents' => fopen('answer.json', 'r')
+                ],
+            ],
+        ]);
+    }
 }

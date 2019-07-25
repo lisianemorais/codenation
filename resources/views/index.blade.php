@@ -7,26 +7,26 @@
         <title> CodeNation </title>
     </head>
     <body>
-    <div class="content">
-        <h1>Desafio</h1>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <table>
-                    <tr>
-                        <th>Mensagem Cifrada</th>
-                        <th>Mensagem Decifrada</th>
-                        <th>Resumo Criptografado</th>
-                    </tr>
-                    <tr>
-                        <td>{{$desafio->cifrado}}</td>
-                        <td>{{$desafio->decifrado}}</td>
-                        <td>{{$desafio->resumo_criptografico}}</td>
-                    </tr>
+        <div class="content">
+            <h1>Desafio</h1>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table>
+                        <tr>
+                            <th>Mensagem Cifrada</th>
+                            <th>Mensagem Decifrada</th>
+                            <th>Resumo Criptografado</th>
+                        </tr>
+                        <tr>
+                            <td>{{$desafio->cifrado}}</td>
+                            <td>{{$desafio->decifrado}}</td>
+                            <td>{{$desafio->resumo_criptografico}}</td>
+                        </tr>
 
-                </table>
+                    </table>
 
+                </div>
             </div>
         </div>
-    </div>
     </body>
 </html>
