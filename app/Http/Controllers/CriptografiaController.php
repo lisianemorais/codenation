@@ -20,7 +20,7 @@ class CriptografiaController extends Controller
 
     public function index()
     {
-        $response = $this->client->request('GET', 'generate-data?token=ee86ea5dfd1784bc4672d9adfb11fd00d55bb688');
+        $response = $this->client->request('GET', 'generate-data?token=1352b05ea2f10f9841baa65009e5ca5ccd0a5285');
         $desafioCriptografado = json_decode($response->getBody()->getContents());
 
         $this->geraArquivoJson($desafioCriptografado);
@@ -43,6 +43,7 @@ class CriptografiaController extends Controller
 
                 switch ($item){
                     case is_int($item):
+                    case ':':
                     case '.':
                     case ' ':
                         $mensagemDecifrada .= $item;
@@ -55,15 +56,20 @@ class CriptografiaController extends Controller
             }
         }
         $desafioCriptografado->decifrado = $mensagemDecifrada;
+        var_dump($mensagemDecifrada);
+        
         $this->geraArquivoJson($desafioCriptografado);
     }
 
     public function getCaracterDescriptografado($indiceCifrado, $numeroCasas)
     {
+       // {"numero_casas":11,"token":"1352b05ea2f10f9841baa65009e5ca5ccd0a5285","cifrado":"ty escpp hzcod t nly dfx fa pgpcjestyr t slgp wplcypo lmzfe wtqp: te rzpd zy. czmpce qczde","decifrado":"in three words i can sum up everything i have learned about life: it goes on. robert frost","resumo_criptografico":"b946be28903c3a1ed04aa27b52c366922033277b"}
         $indiceDecifrado = $indiceCifrado - $numeroCasas;
+
         if ($indiceDecifrado < 0) {
-            $indiceDecifrado = sizeof($this->alfabeto) - $indiceCifrado;
+            $indiceDecifrado = sizeof($this->alfabeto) - abs($indiceDecifrado);
         }
+       
         return  $this->alfabeto[$indiceDecifrado];
     }
 
@@ -92,7 +98,7 @@ class CriptografiaController extends Controller
 
     public function submeteCriptografia()
     {
-        $response = $this->client->request('POST', 'submit-solution?token=ee86ea5dfd1784bc4672d9adfb11fd00d55bb688', [
+        $response = $this->client->request('POST', 'submit-solution?token=1352b05ea2f10f9841baa65009e5ca5ccd0a5285', [
             'multipart' => [
                 [
                     'name'     => 'answer',
